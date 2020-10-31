@@ -1,33 +1,73 @@
 <?php
+declare(strict_types=1);
 
+use app\Exceptions\OrderException;
 
 class Order
 {
-    private string $transport = '';
-    private string $quantity = '';
+    const ERROR_CODES = [
+        1 => '',
+    ];
+
+    const BOOK_PRICE = 499;
+    const TRANSPORT_TYPES = ['cashOnDelivery' => 150, 'moneyTransfer' => 0];
+
+    private int $transport = 0;
+    private int $quantity = 0;
+    private int $fullPrice = 0;
     private string $firstName = '';
     private string $lastName = '';
     private string $street = '';
     private string $town = '';
-    private string $zipCode = '';
-    private string $phoneNumber = '';
+    private int $zipCode = 0;
+    private int $phoneNumber = 0;
     private string $email = '';
 
     private bool $issetOrder = false;
 
     private array $forbiddenString = ['[', '_', '!', '#', '$', '%', '^', '&', '*', '(', ')', '<', '>', '?', '/', '|', '}', '{', '~', ':', ']'];
 
+    private bool $inputsValid = false;
+    private ?int $errorCode=null;
+
+    /**
+     * Was order sent?
+     * @return bool
+     */
+    public function isOrderSent(): bool
+    {
+        return isset($_POST) && isset($_POST["order"]);
+    }
+
+    private function validateInputs(): bool
+    {
+        $this->inputsValid = false;
+        try {
+            $this->getTransportFromSession();
+
+
+            return $this->inputsValid = true;
+        } catch (OrderException $e) {
+            $this->errorCode = $e->getCode();
+        }
+        return $this->inputsValid = false;
+    }
+
+
     public function makeOrder(): bool
     {
         if ($this->getAllInputsFromPost()) {
-            $this->issetOrder = 1;
-            return 1;
+            if ($this->sumFullPrice()) {
+                $this->issetOrder = true;
+                //return 1;
+            }
         }
-        return 0;
+        return false;
     }
 
     public function onSuccess(): bool
     {
+        //todo onSuccess
         return $this->issetOrder;
     }
 
@@ -47,8 +87,8 @@ class Order
                                 if ($this->getZipCodeFromPost())
                                     if ($this->getPhoneNumberFromPost())
                                         if ($this->getEmailFromPost())
-                                            return 1;
-        return 0;
+                                            return true;
+        return false;
 
         /*$arr1 = ['order-quantity', 'order-first-name', 'order-last-name', 'order-street', 'order-town', 'order-zip-code', 'order-phone-number', 'order-email'];
         $arr2 = ['quantity', 'firstName', 'lastName', 'street', 'town', 'zipCode', 'phoneNumber', 'email'];
@@ -71,16 +111,26 @@ class Order
 
     /**
      * Get form values form POST
+     * @param bool $throw
      * @return bool
+     * @throws OrderException
      */
-
-    private function getTransportFromSession(): bool
+    private function getTransportFromSession(bool $throw=true): bool
     {
         if (isset($_POST['order-transport'])) {
-            $this->transport = $_POST['order-transport'];
-            return 1;
+            $transport = $_POST['order-transport'];
+            $transportTypes = self::TRANSPORT_TYPES;
+
+            foreach ($transportTypes as $transportType => $i) {
+                if ($transport == $transportType) {
+                    $this->transport = $i;
+                    return true;
+                }
+            }
         }
-        return 0;
+        if($throw === true)
+            throw new OrderException("Transport missing", 1);
+        return false;
     }
 
     private function getQuantityFromPost(): bool
@@ -89,9 +139,9 @@ class Order
             $quantity = $_POST['order-quantity'];
 
             if ($this->isInputValueValid('intQuantity', $quantity))
-                return 1;
+                return true;
         }
-        return 0;
+        return false;
     }
 
     /**
@@ -104,9 +154,9 @@ class Order
             $firstName = $_POST['order-first-name'];
 
             if ($this->isInputValueValid('stringName', $firstName))
-                return 1;
+                return true;
         }
-        return 0;
+        return false;
     }
 
     /**
@@ -118,10 +168,10 @@ class Order
         if (isset($_POST['order-last-name'])) {
             $lastName = $_POST['order-last-name'];
 
-            if ($this->isInputValueValid('stringName', $lastName, 1))
-                return 1;
+            if ($this->isInputValueValid('stringName', $lastName, true))
+                return true;
         }
-        return 0;
+        return false;
     }
 
     /**
@@ -134,9 +184,9 @@ class Order
             $street = $_POST['order-street'];
 
             if ($this->isInputValueValid('floatStreet', $street))
-                return 1;
+                return true;
         }
-        return 0;
+        return false;
     }
 
     /**
@@ -149,9 +199,9 @@ class Order
             $town = $_POST['order-town'];
 
             if ($this->isInputValueValid('stringTown', $town))
-                return 1;
+                return true;
         }
-        return 0;
+        return false;
     }
 
     /**
@@ -163,10 +213,10 @@ class Order
         if (isset($_POST['order-zip-code'])) {
             $zipCode = $_POST['order-zip-code'];
 
-            if ($this->isInputValueValid('IntZipCode', $zipCode))
-                return 1;
+            if ($this->isInputValueValid('intZipCode', $zipCode))
+                return true;
         }
-        return 0;
+        return false;
     }
 
     /**
@@ -179,9 +229,9 @@ class Order
             $phoneNumber = $_POST['order-phone-number'];
 
             if ($this->isInputValueValid('intPhoneNumber', $phoneNumber))
-                return 1;
+                return true;
         }
-        return 0;
+        return false;
     }
 
     /**
@@ -194,9 +244,9 @@ class Order
             $email = $_POST['order-email'];
 
             if ($this->isInputValueValid('floatEmail', $email))
-                return 1;
+                return false;
         }
-        return 0;
+        return true;
     }
 
     /**
@@ -207,23 +257,23 @@ class Order
      * @return bool
      */
 
-    private function isInputValueValid(string $type, string $value, ?bool $level = false): bool
+    public function isInputValueValid(string $type, string $value, ?bool $level = false): bool
     {
         switch ($type) {
             case 'intQuantity':
-                if (is_int($value)) {
-                    if ($value > 0 && $value <= 50) {
+                if (is_numeric($value)) {
+                    if ($value > 0 && $value <= 100) {
                         $this->quantity = $value;
-                        return 1;
+                        return true;
                     }
                 }
                 break;
             case 'stringName':
-                if (!is_int($value) && $this->isStringValueValid($value)) {
+                if (!is_numeric($value) && $this->isStringValueValid($value)) {
                     if (!preg_match('/\d/', $value)) {
-                        if ($value > 2 && $value < 20) {
+                        if (strlen($value) > 2 && strlen($value) < 20) {
                             $level ? $this->firstName = $value : $this->lastName = $value;
-                            return 1;
+                            return true;
                         }
                     }
                 }
@@ -232,42 +282,47 @@ class Order
                 if ($this->isStringValueValid($value)) {
                     if (preg_match('/\d/', $value)) {
                         $this->street = $value;
-                        return 1;
+                        return true;
                     }
                 }
                 break;
             case 'stringTown':
                 if ($this->isStringValueValid($value)) {
                     $this->town = $value;
-                    return 1;
+                    return true;
                 }
                 break;
             case 'intZipCode':
-                if (is_int($value) && strlen($value) == 5) {
+                if (is_numeric($value) && strlen($value) == 5) {
                     $this->zipCode = $value;
-                    return 1;
+                    return true;
                 }
                 break;
             case 'intPhoneNumber':
-                if (is_int($value) && strlen($value) == 9) {
-                    $this->phoneNumber = $value;
-                    return 1;
+                if ($this->isStringValueValid($value)) {
+                    $value = str_replace(' ', '', $value);
+                    if (is_numeric($value) && strlen($value) == 9) {
+                        $this->phoneNumber = $value;
+                        return true;
+                    }
                 }
                 break;
             case 'floatEmail':
-                if ($this->isStringValueValid($value, 1) && substr_count($value, '@') == 1)
+                if ($this->isStringValueValid($value, true) && substr_count($value, '@') == 1) {
                     if (strpos($value, '@') != '') {
+                        echo $value;
                         $atIndex = strpos($value, '@') + 1;
                         $domain = substr($value, $atIndex);
 
                         if (strpos($domain, '.') != '') {
                             $this->email = $value;
-                            return 1;
+                            return true;
                         }
                     }
+                }
                 break;
         }
-        return 0;
+        return false;
     }
 
     /**
@@ -277,16 +332,23 @@ class Order
      * @return bool
      */
 
-    private function isStringValueValid(string $value, ?bool $email = false): bool
+    public function isStringValueValid(string $value, ?bool $email = false): bool
     {
         $value = str_replace($this->forbiddenString, '', $value);
         if (!$email) {
             $value = str_replace('@', '', $value);
             $value = str_replace('.', '', $value);
         }
+        if (strlen($value) > 0 && strlen($value) < 100)
+            return true;
+        return false;
+    }
 
-        if ($value > 0 && $value < 100)
-            return 1;
-        return 0;
+    private function sumFullPrice(): bool
+    {
+        $transport = $this->transport;
+        $this->fullPrice = self::BOOK_PRICE * $this->quantity + $transport;
+
+        return $this->fullPrice > $transport;
     }
 }

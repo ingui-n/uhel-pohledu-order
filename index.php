@@ -16,6 +16,18 @@ $order = new Order();
 
 <body>
 <?php
+/*if (!is_numeric('ghvj'))
+    echo 'ano';
+else
+    echo 'ne';*/
+
+$email = 'rtg@';
+
+if ($order->isInputValueValid('floatEmail', $email))
+    echo 'true';
+
+$order->makeOrder();
+
 if (!$order->makeOrder()) {
     ?>
     <div class="container">
@@ -26,32 +38,36 @@ if (!$order->makeOrder()) {
                 <a href="mailto:objednavky@uhel-pohledu.cz">objednavky@uhel-pohledu.cz</a>.</p>
             <div class="form">
                 <form method="post">
+                    <input type="hidden" name="order">
                     <div class="transport">
                         <div class="transport__left">
                             <label for="radio">
-                                <input type="radio" name="order-transport" id="radio" class="radio__first" value="150" checked>
+                                <input type="radio" name="order-transport" id="radio" value="cashOnDelivery" data-price="150" checked>
                             </label>
                             <img src="images/book.jpg" alt="Kniha">
-                            <p>Cena za kus</p>
-                            <p>Poštovné</p>
-                            <p>Přepravce</p>
+                            <p class="book-price">499</p>
+                            <p>,-/ks</p>
+                            <p>+ Dobírka 150 Kč</p>
+                            <p>Česká pošta - doporučeně:</p>
                         </div>
                         <div class="transport__right">
                             <label for="radio">
-                                <input type="radio" name="order-transport" id="radio" class="radio__second" value="0">
+                                <input type="radio" name="order-transport" id="radio" value="moneyTransfer" data-price="0">
                             </label>
                             <img src="images/book.jpg" alt="Kniha">
-                            <p>Cena za kus</p>
-                            <p>Poštovné</p>
-                            <p>Přepravce</p>
+                            <p class="book-price">499</p>
+                            <p>,-/ks</p>
+                            <p class="transport-price" >Platba převodem</p>
+                            <p>Česká pošta - doporučeně:</p>
                         </div>
                     </div>
-                    <div class="quantity">
+                    <div class="book-quantity">
                         <label for="quantity">
-                            <input type="number" name="book-quantity" class="form-item" id="quantity" min="1" max="100" required value="">
+                            <input type="number" name="book-quantity" class="form-item" id="quantity" min="1" max="100" required value="1">
                         </label>
+                        <p>ks</p>
                         <p>Celkem:</p>
-                        <p>999999</p>
+                        <p class="total-price">0</p>
                         <p>Kč</p>
                     </div>
                     <div class="form-text-inputs">
@@ -75,7 +91,7 @@ if (!$order->makeOrder()) {
                         </label>
                         <p>PSČ:</p>
                         <label for="zip-code">
-                            <input type="number" name="order-zip-code" class="form-item" id="zip-code" required min="5" value="">
+                            <input type="number" name="order-zip-code" class="form-item" id="zip-code" min="5" required  value="">
                         </label>
                         <p>Telefon:</p>
                         <label for="phone-number">
