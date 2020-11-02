@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="2e06571d-33ac-4724-85aa-a102c0148081" name="Default Changelist" comment="0.1">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
@@ -59,6 +77,8 @@
       <workItem from="1604059751969" duration="708000" />
       <workItem from="1604060504117" duration="8559000" />
       <workItem from="1604072178092" duration="1523000" />
+      <workItem from="1604144861452" duration="153000" />
+      <workItem from="1604325667989" duration="8778000" />
     </task>
     <task id="LOCAL-00001" summary="0.1">
       <created>1604006978500</created>
@@ -67,17 +87,41 @@
       <option name="project" value="LOCAL" />
       <updated>1604006978500</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="0.2">
+      <created>1604144982783</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1604144982783</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="0.1" />
-    <option name="LAST_COMMIT_MESSAGE" value="0.1" />
+    <MESSAGE value="0.2" />
+    <option name="LAST_COMMIT_MESSAGE" value="0.2" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="225" y="190" key="#com.intellij.ide.util.MemberChooser" timestamp="1604349883736">
+      <screen x="0" y="0" width="1680" height="1010" />
+    </state>
+    <state x="225" y="190" key="#com.intellij.ide.util.MemberChooser/0.0.1680.1010@0.0.1680.1010" timestamp="1604349883736" />
     <state x="620" y="260" key="FileChooserDialogImpl" timestamp="1604006797477">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
@@ -86,18 +130,18 @@
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state x="693" y="403" key="Github.ShareDialog/0.0.1680.1010@0.0.1680.1010" timestamp="1604006837948" />
-    <state x="637" y="228" key="NewPhpClassDialog" timestamp="1603976812154">
+    <state x="637" y="228" key="NewPhpClassDialog" timestamp="1604347766601">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state x="637" y="228" key="NewPhpClassDialog/0.0.1680.1010@0.0.1680.1010" timestamp="1603976812154" />
+    <state x="637" y="228" key="NewPhpClassDialog/0.0.1680.1010@0.0.1680.1010" timestamp="1604347766601" />
     <state x="674" y="428" key="NewPhpFileDialog" timestamp="1603973946712">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state x="674" y="428" key="NewPhpFileDialog/0.0.1680.1010@0.0.1680.1010" timestamp="1603973946712" />
-    <state x="432" y="238" key="Vcs.Push.Dialog.v2" timestamp="1604006982421">
+    <state x="432" y="238" key="Vcs.Push.Dialog.v2" timestamp="1604144988421">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state x="432" y="238" key="Vcs.Push.Dialog.v2/0.0.1680.1010@0.0.1680.1010" timestamp="1604006982421" />
+    <state x="432" y="238" key="Vcs.Push.Dialog.v2/0.0.1680.1010@0.0.1680.1010" timestamp="1604144988421" />
     <state x="657" y="419" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1604007192157">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>

@@ -16,17 +16,6 @@ $order = new Order();
 
 <body>
 <?php
-/*if (!is_numeric('ghvj'))
-    echo 'ano';
-else
-    echo 'ne';*/
-
-$email = 'rtg@';
-
-if ($order->isInputValueValid('floatEmail', $email))
-    echo 'true';
-
-$order->makeOrder();
 
 if (!$order->makeOrder()) {
     ?>
@@ -37,12 +26,12 @@ if (!$order->makeOrder()) {
                 vyřizujeme <b>s individuálním přístupem</b>. Kontaktujte nás prosím na
                 <a href="mailto:objednavky@uhel-pohledu.cz">objednavky@uhel-pohledu.cz</a>.</p>
             <div class="form">
-                <form method="post">
+                <form method="post" name="order">
                     <input type="hidden" name="order">
                     <div class="transport">
                         <div class="transport__left">
                             <label for="radio">
-                                <input type="radio" name="order-transport" id="radio" value="cashOnDelivery" data-price="150" checked>
+                                <input type="radio" name="order[order-transport]" id="radio" value="cashOnDelivery" data-price="150" checked>
                             </label>
                             <img src="images/book.jpg" alt="Kniha">
                             <p class="book-price">499</p>
@@ -52,7 +41,7 @@ if (!$order->makeOrder()) {
                         </div>
                         <div class="transport__right">
                             <label for="radio">
-                                <input type="radio" name="order-transport" id="radio" value="moneyTransfer" data-price="0">
+                                <input type="radio" name="order[order-transport]" id="radio" value="moneyTransfer" data-price="0">
                             </label>
                             <img src="images/book.jpg" alt="Kniha">
                             <p class="book-price">499</p>
@@ -63,7 +52,7 @@ if (!$order->makeOrder()) {
                     </div>
                     <div class="book-quantity">
                         <label for="quantity">
-                            <input type="number" name="book-quantity" class="form-item" id="quantity" min="1" max="100" required value="1">
+                            <input type="number" name="order[order-quantity]" class="form-item" id="quantity" min="1" max="100" required value="1">
                         </label>
                         <p>ks</p>
                         <p>Celkem:</p>
@@ -74,32 +63,32 @@ if (!$order->makeOrder()) {
                         <p>Fakturační a dodací adresa:</p>
                         <p>Jméno:</p>
                         <label for="first-name">
-                            <input type="text" name="order-first-name" class="form-item" id="first-name" min="2" max="20" required value="">
+                            <input type="text" name="order[order-first-name]" class="form-item" id="first-name" min="2" max="20" required value="">
                         </label>
                         <p>Příjmení:</p>
                         <label for="last-name">
-                            <input type="text" name="order-last-name" class="form-item" id="last-name" min="2" max="20" required value="">
+                            <input type="text" name="order[order-last-name]" class="form-item" id="last-name" min="2" max="20" required value="">
                         </label>
                         <p>Ulice a číslo:</p>
                         <label for="street">
-                            <input type="text" name="order-street" class="form-item" id="street" min="4" max="70"
+                            <input type="text" name="order[order-street]" class="form-item" id="street" min="4" max="70"
                                    required value="">
                         </label>
                         <p>Město:</p>
                         <label for="town">
-                            <input type="text" name="order-town" class="form-item" id="town" min="2" max="70" required value="">
+                            <input type="text" name="order[order-town]" class="form-item" id="town" min="2" max="70" required value="">
                         </label>
                         <p>PSČ:</p>
                         <label for="zip-code">
-                            <input type="number" name="order-zip-code" class="form-item" id="zip-code" min="5" required  value="">
+                            <input type="number" name="order[order-zip-code]" class="form-item" id="zip-code" min="5" required  value="">
                         </label>
                         <p>Telefon:</p>
                         <label for="phone-number">
-                            <input type="number" name="order-phone-number" class="form-item" id="phone-number" min="8" required value="">
+                            <input type="number" name="order[order-phone-number]" class="form-item" id="phone-number" min="8" required value="">
                         </label>
                         <p>E-mail:</p>
                         <label for="email">
-                            <input type="text" name="order-email" class="form-item" id="email" min="4" max="50" required value="">
+                            <input type="text" name="order[order-email]" class="form-item" id="email" min="4" max="50" required value="">
                         </label>
                     </div>
                     <label for="terms">

@@ -7,6 +7,15 @@ class Order
 {
     const ERROR_CODES = [
         1 => '',
+        2 => '',
+        3 => '',
+        4 => '',
+        5 => '',
+        6 => '',
+        7 => '',
+        8 => '',
+        9 => '',
+        10 => '',
     ];
 
     const BOOK_PRICE = 499;
@@ -25,7 +34,7 @@ class Order
 
     private bool $issetOrder = false;
 
-    private array $forbiddenString = ['[', '_', '!', '#', '$', '%', '^', '&', '*', '(', ')', '<', '>', '?', '/', '|', '}', '{', '~', ':', ']'];
+    private array $forbiddenString = ['[', '@', '.', '_', '!', '#', '$', '%', '^', '&', '*', '(', ')', '<', '>', '?', '/', '|', '}', '{', '~', ':', ']'];
 
     private bool $inputsValid = false;
     private ?int $errorCode=null;
@@ -42,11 +51,26 @@ class Order
     private function validateInputs(): bool
     {
         $this->inputsValid = false;
+        $values = new PostFilter('form-order');
+
+
         try {
-            $this->getTransportFromSession();
+            if ($values == $values->getPostValues() && $values->getPostValues() > 0) {
+                $postValues = $values->getPostValues();
+                $this->setTransport($postValues['order-transport']);
+                $this->setQuantity($postValues['order-quantity']);
+                $this->setFirstName($postValues['order-first-name']);
+                $this->setLastName($postValues['order-last-name']);
+                $this->setStreet($postValues['order-street']);
+                $this->setTown($postValues['order-town']);
+                $this->setZipCode($postValues['order-zip-code']);
+                $this->setPhoneNumber($postValues['order-phone-number']);
+                $this->setEmail($postValues['order-email']);
 
-
-            return $this->inputsValid = true;
+                return $this->inputsValid = true;
+            } else {
+                throw new OrderException("Something went wrong", 10);
+            }
         } catch (OrderException $e) {
             $this->errorCode = $e->getCode();
         }
@@ -56,7 +80,7 @@ class Order
 
     public function makeOrder(): bool
     {
-        if ($this->getAllInputsFromPost()) {
+        if ($this->validateInputs()) {
             if ($this->sumFullPrice()) {
                 $this->issetOrder = true;
                 //return 1;
@@ -74,10 +98,12 @@ class Order
     /**
      * Get ALL values form POST
      * @return bool
+     * @throws OrderException
      */
-
+/*
     private function getAllInputsFromPost(): bool
     {
+
         if ($this->getTransportFromSession())
             if ($this->getQuantityFromPost())
                 if ($this->getFirstNameFromPost())
@@ -89,43 +115,24 @@ class Order
                                         if ($this->getEmailFromPost())
                                             return true;
         return false;
-
-        /*$arr1 = ['order-quantity', 'order-first-name', 'order-last-name', 'order-street', 'order-town', 'order-zip-code', 'order-phone-number', 'order-email'];
-        $arr2 = ['quantity', 'firstName', 'lastName', 'street', 'town', 'zipCode', 'phoneNumber', 'email'];
-
-        foreach ($arr1 as $value => $item) {
-            if (!$this->getItemFromPost($item, $arr2[$value]))
-                return 0;
-        }
-        return 1;*/
-    }
-
-    /*private function getItemFromPost(string $postName, string $name): bool
-    {
-        if (isset($_POST[$postName])) {
-            $this->$name = $_POST[$postName];
-            return 1;
-        }
-        return 0;
     }*/
 
     /**
      * Get form values form POST
+     * @param string $value
      * @param bool $throw
      * @return bool
      * @throws OrderException
      */
-    private function getTransportFromSession(bool $throw=true): bool
-    {
-        if (isset($_POST['order-transport'])) {
-            $transport = $_POST['order-transport'];
-            $transportTypes = self::TRANSPORT_TYPES;
 
-            foreach ($transportTypes as $transportType => $i) {
-                if ($transport == $transportType) {
-                    $this->transport = $i;
-                    return true;
-                }
+    private function setTransport(string $value, bool $throw=true): bool
+    {
+        $transportTypes = self::TRANSPORT_TYPES;
+
+        foreach ($transportTypes as $transportType => $index) {
+            if ($value == $transportType) {
+                $this->transport = $index;
+                return true;
             }
         }
         if($throw === true)
@@ -133,212 +140,120 @@ class Order
         return false;
     }
 
-    private function getQuantityFromPost(): bool
+    private function setQuantity(string $value, bool $throw=true): bool
     {
-        if (isset($_POST['order-quantity'])) {
-            $quantity = $_POST['order-quantity'];
-
-            if ($this->isInputValueValid('intQuantity', $quantity))
+        if (is_numeric($value)) {
+            if ($value > 0 && $value <= 100) {
+                $this->quantity = $value;
                 return true;
+            }
         }
+        if ($throw === true)
+            throw new OrderException("Book quantity is missing", 2);
         return false;
     }
 
-    /**
-     * @return bool
-     */
-
-    private function getFirstNameFromPost(): bool
+    private function setFirstName(string $value, bool $throw=true): bool
     {
-        if (isset($_POST['order-first-name'])) {
-            $firstName = $_POST['order-first-name'];
-
-            if ($this->isInputValueValid('stringName', $firstName))
-                return true;
-        }
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-
-    private function getLastNameFromPost(): bool
-    {
-        if (isset($_POST['order-last-name'])) {
-            $lastName = $_POST['order-last-name'];
-
-            if ($this->isInputValueValid('stringName', $lastName, true))
-                return true;
-        }
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-
-    private function getStreetFromPost(): bool
-    {
-        if (isset($_POST['order-street'])) {
-            $street = $_POST['order-street'];
-
-            if ($this->isInputValueValid('floatStreet', $street))
-                return true;
-        }
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-
-    private function getTownFromPost(): bool
-    {
-        if (isset($_POST['order-town'])) {
-            $town = $_POST['order-town'];
-
-            if ($this->isInputValueValid('stringTown', $town))
-                return true;
-        }
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-
-    private function getZipCodeFromPost(): bool
-    {
-        if (isset($_POST['order-zip-code'])) {
-            $zipCode = $_POST['order-zip-code'];
-
-            if ($this->isInputValueValid('intZipCode', $zipCode))
-                return true;
-        }
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-
-    private function getPhoneNumberFromPost(): bool
-    {
-        if (isset($_POST['order-phone-number'])) {
-            $phoneNumber = $_POST['order-phone-number'];
-
-            if ($this->isInputValueValid('intPhoneNumber', $phoneNumber))
-                return true;
-        }
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-
-    private function getEmailFromPost(): bool
-    {
-        if (isset($_POST['order-email'])) {
-            $email = $_POST['order-email'];
-
-            if ($this->isInputValueValid('floatEmail', $email))
-                return false;
-        }
-        return true;
-    }
-
-    /**
-     * Checks input value, saves it to private variable
-     * @param string $type
-     * @param string $value
-     * @param bool|null $level
-     * @return bool
-     */
-
-    public function isInputValueValid(string $type, string $value, ?bool $level = false): bool
-    {
-        switch ($type) {
-            case 'intQuantity':
-                if (is_numeric($value)) {
-                    if ($value > 0 && $value <= 100) {
-                        $this->quantity = $value;
-                        return true;
-                    }
-                }
-                break;
-            case 'stringName':
-                if (!is_numeric($value) && $this->isStringValueValid($value)) {
-                    if (!preg_match('/\d/', $value)) {
-                        if (strlen($value) > 2 && strlen($value) < 20) {
-                            $level ? $this->firstName = $value : $this->lastName = $value;
-                            return true;
-                        }
-                    }
-                }
-                break;
-            case 'floatStreet':
-                if ($this->isStringValueValid($value)) {
-                    if (preg_match('/\d/', $value)) {
-                        $this->street = $value;
-                        return true;
-                    }
-                }
-                break;
-            case 'stringTown':
-                if ($this->isStringValueValid($value)) {
-                    $this->town = $value;
+        if (!is_numeric($value) && $this->isStringValueValid($value)) {
+            if (!preg_match('/\d/', $value)) {
+                if (strlen($value) > 2 && strlen($value) < 20) {
+                    $this->firstName = $value;
                     return true;
                 }
-                break;
-            case 'intZipCode':
-                if (is_numeric($value) && strlen($value) == 5) {
-                    $this->zipCode = $value;
+            }
+        }
+        if ($throw === true)
+            throw new OrderException("First name is missing", 3);
+        return false;
+    }
+
+    private function setLastName(string $value, bool $throw=true): bool
+    {
+        if (!is_numeric($value) && $this->isStringValueValid($value)) {
+            if (!preg_match('/\d/', $value)) {
+                if (strlen($value) > 2 && strlen($value) < 20) {
+                    $this->lastName = $value;
                     return true;
                 }
-                break;
-            case 'intPhoneNumber':
-                if ($this->isStringValueValid($value)) {
-                    $value = str_replace(' ', '', $value);
-                    if (is_numeric($value) && strlen($value) == 9) {
-                        $this->phoneNumber = $value;
-                        return true;
-                    }
-                }
-                break;
-            case 'floatEmail':
-                if ($this->isStringValueValid($value, true) && substr_count($value, '@') == 1) {
-                    if (strpos($value, '@') != '') {
-                        echo $value;
-                        $atIndex = strpos($value, '@') + 1;
-                        $domain = substr($value, $atIndex);
-
-                        if (strpos($domain, '.') != '') {
-                            $this->email = $value;
-                            return true;
-                        }
-                    }
-                }
-                break;
+            }
         }
+        if ($throw === true)
+            throw new OrderException("Last name is missing", 4);
+        return false;
+    }
+
+    private function setStreet(string $value, bool $throw=true): bool
+    {
+        if ($this->isStringValueValid($value)) {
+            if (preg_match('/\d/', $value)) {
+                $this->street = $value;
+                return true;
+            }
+        }
+        if ($throw === true)
+            throw new OrderException("Street is missing", 5);
+        return false;
+    }
+
+    private function setTown(string $value, bool $throw=true): bool
+    {
+        if ($this->isStringValueValid($value)) {
+            $this->town = $value;
+            return true;
+        }
+        if ($throw === true)
+            throw new OrderException("Town is missing", 6);
+        return false;
+    }
+
+    private function setZipCode(string $value, bool $throw=true): bool
+    {
+        $value = str_replace(' ', '', $value);
+        if (is_numeric($value) && strlen($value) == 5) {
+            $this->zipCode = $value;
+            return true;
+        }
+        if ($throw === true)
+            throw new OrderException("Zip code is missing", 7);
+        return false;
+    }
+
+    private function setPhoneNumber(string $value, bool $throw=true): bool
+    {
+        if ($this->isStringValueValid($value)) {
+            $value = str_replace(' ', '', $value);
+            if (is_numeric($value) && strlen($value) == 9) {
+                $this->phoneNumber = $value;
+                return true;
+            }
+        }
+        if ($throw === true)
+            throw new OrderException("Phone number is missing", 8);
+        return false;
+    }
+
+    public function setEmail(string $value, bool $throw=true): bool
+    {
+        if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
+            $this->email = $value;
+            return true;
+        }
+        if ($throw === true)
+            throw new OrderException("Email is missing", 9);
         return false;
     }
 
     /**
      * Checks forbidden characters in input string
      * @param string $value
-     * @param bool|null $email
      * @return bool
      */
 
-    public function isStringValueValid(string $value, ?bool $email = false): bool
+    public function isStringValueValid(string $value): bool
     {
         $value = str_replace($this->forbiddenString, '', $value);
-        if (!$email) {
-            $value = str_replace('@', '', $value);
-            $value = str_replace('.', '', $value);
-        }
+
         if (strlen($value) > 0 && strlen($value) < 100)
             return true;
         return false;

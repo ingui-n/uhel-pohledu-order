@@ -40,11 +40,6 @@ function sumFullPrice() {
         totalPrice.textContent = '0';
     } else {
         let transportPrice = document.querySelector('#radio:checked');
-        //console.log('________________');
-        //console.log('kniha '+bookPrice.value);
-        //console.log('kniha '+parseInt(bookPrice.textContent));
-        //console.log('množství '+parseInt(quantity.value));
-        //console.log('transport '+transportPrice.value);
         totalPrice.textContent = bookPrice * parseInt(quantity.value) + parseInt(transportPrice.dataset.price);
     }
 }
