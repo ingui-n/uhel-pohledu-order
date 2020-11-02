@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+include_once __DIR__ . '/PostFilter.php';
+
 use app\Exceptions\OrderException;
 
 class Order
@@ -51,7 +53,7 @@ class Order
     private function validateInputs(): bool
     {
         $this->inputsValid = false;
-        $values = new PostFilter('form-order');
+        $values = new PostFilter('order');
 
 
         try {
