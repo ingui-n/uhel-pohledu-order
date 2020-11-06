@@ -58,7 +58,7 @@ if ($order->printOrder() === true) {
                             <p>Česká pošta - doporučeně:</p>
                         </div>
                         <div class="transport__right">
-                            <input type="radio" name="order[transport]" id="radio" value="moneyTransfer" data-price="0">
+                            <input type="radio" name="order[transport]" class="<?php echo $order->isInvalid('transport') ? 'error-class' : ''; ?>" id="radio" value="moneyTransfer" data-price="0">
                             <label for="radio"><img src="images/book.jpg" alt="Kniha"></label>
                             <p class="book-price"><span class="book__price"><?php echo $bookPrice; ?></span>,-/ks</p>
                             <p>Platba převodem</p>
@@ -67,26 +67,26 @@ if ($order->printOrder() === true) {
                     </div>
                     <div class="book-quantity">
                         <label for="quantity">Množství:</label>
-                        <input type="number" name="order[quantity]" class="form-item" id="quantity" pattern="[0-9].{1,3}" required value="<?php echo $values['quantity'] ?? 1 ?>">
+                        <input type="number" name="order[quantity]" class="form-item <?php echo $order->isInvalid('quantity') ? 'error-class' : ''; ?>" id="quantity" pattern="[0-9].{1,3}" required value="<?php echo $values['quantity'] ?? 1 ?>">
                         <label for="quantity">ks</label>
                         <p>Celkem: <span class="total-price">0</span> Kč</p>
                     </div>
                     <div class="form-text-inputs">
                         <p>Fakturační a dodací adresa:</p>
                         <label for="first-name">Jméno:</label>
-                        <input type="text" name="order[first-name]" class="form-item" id="first-name" min="2" max="20" required value="">
+                        <input type="text" name="order[first-name]" class="form-item <?php echo $order->isInvalid('firstName') ? 'error-class' : ''; ?>" id="first-name" min="2" max="20" required value="<?php echo $values['first-name'] ?? '' ?>">
                         <label for="last-name">Příjmení:</label>
-                        <input type="text" name="order[last-name]" class="form-item" id="last-name" min="2" max="20" required value="">
+                        <input type="text" name="order[last-name]" class="form-item <?php echo $order->isInvalid('lastName') ? 'error-class' : ''; ?>" id="last-name" min="2" max="20" required value="<?php echo $values['last-name'] ?? '' ?>">
                         <label for="street">Ulice a číslo:</label>
-                        <input type="text" name="order[street]" class="form-item" id="street" min="4" max="70" required value="">
+                        <input type="text" name="order[street]" class="form-item <?php echo $order->isInvalid('street') ? 'error-class' : ''; ?>" id="street" min="4" max="70" required value="<?php echo $values['street'] ?? '' ?>">
                         <label for="town">Město:</label>
-                        <input type="text" name="order[town]" class="form-item" id="town" min="2" max="70" required value="">
+                        <input type="text" name="order[town]" class="form-item <?php echo $order->isInvalid('town') ? 'error-class' : ''; ?>" id="town" min="2" max="70" required value="<?php echo $values['town'] ?? '' ?>">
                         <label for="zip-code">PSČ:</label>
-                        <input type="number" name="order[zip-code]" class="form-item" id="zip-code" min="5" required value="">
+                        <input type="number" name="order[zip-code]" class="form-item <?php echo $order->isInvalid('zipCode') ? 'error-class' : ''; ?>" id="zip-code" min="5" required value="<?php echo $values['zip-code'] ?? '' ?>">
                         <label for="phone-number">Telefon:</label>
-                        <input type="number" name="order[phone-number]" class="form-item" id="phone-number" min="8" required value="">
+                        <input type="number" name="order[phone-number]" class="form-item <?php echo $order->isInvalid('phoneNumber') ? 'error-class' : ''; ?>" id="phone-number" min="8" required value="<?php echo $values['phone-number'] ?? '' ?>">
                         <label for="email">E-mail:</label>
-                        <input type="text" name="order[email]" class="form-item" id="email" min="4" max="50" required value="">
+                        <input type="text" name="order[email]" class="form-item <?php echo $order->isInvalid('email') ? 'error-class' : ''; ?>" id="email" min="4" max="50" required value="<?php echo $values['email'] ?? '' ?>">
                     </div>
                     <input type="checkbox" class="form-item" id="terms" required value="/checkbox">
                     <label for="terms">Souhlasím s <a href="<?php //terms.html ?>">obchodními podmínkami a zpracováním

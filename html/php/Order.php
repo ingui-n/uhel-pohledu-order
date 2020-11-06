@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 include_once __DIR__ . '/PostFilter.php';
+include_once __DIR__ . './../Exceptions/OrderException.php';
 
 use app\Exceptions\OrderException;
 
@@ -24,7 +25,6 @@ class Order
 
     protected ?string $transport = null;
     protected ?int $quantity = null;
-    protected ?int $fullPrice = null;
     protected ?string $firstName = null;
     protected ?string $lastName = null;
     protected ?string $street = null;
@@ -32,6 +32,7 @@ class Order
     protected ?int $zipCode = null;
     protected ?int $phoneNumber = null;
     protected ?string $email = null;
+    protected ?int $fullPrice = null;
 
     private bool $issetOrder = false;
 
@@ -91,9 +92,14 @@ class Order
         return $this->issetOrder;
     }
 
+    /**
+     * @param string $value
+     * @return bool
+     */
     public function isInvalid(string $value): bool
     {
-        return $this->$value !== null;
+        //eval($value);
+        return $this->{$value} !== null;
     }
 
     /**
