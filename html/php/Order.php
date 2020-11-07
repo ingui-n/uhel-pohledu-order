@@ -38,7 +38,7 @@ class Order
 
     private array $forbiddenString = ['[', '@', '.', '_', '!', '#', '$', '%', '^', '&', '*', '(', ')', '<', '>', '?', '/', '|', '}', '{', '~', ':', ']'];
 
-    protected ?int $errorCode=null;
+    protected ?int $errorNumber=null;
     protected bool $status=false;
 
 
@@ -54,7 +54,7 @@ class Order
             $this->sumFullPrice();
             $this->status = true;
         } catch (OrderException $e) {
-            $this->errorCode = $e->getCode();
+            $this->errorNumber = $e->getCode();
         }
         $this->onSuccess();
     }
@@ -98,8 +98,10 @@ class Order
      */
     public function isInvalid(string $value): bool
     {
+        return false;
         //eval($value);
-        return $this->{$value} !== null;
+        //echo $this->$value;
+        //return $this->$value;
     }
 
     /**
@@ -205,9 +207,7 @@ class Order
     private function validateZipCode(bool $throw=true): bool
     {
         if (is_int($this->zipCode)) {
-            $zipCode = str_replace(' ', '', $this->zipCode);//todo test if space can get there
-
-            if (strlen($zipCode) == 5)
+            if (strlen(strval($this->zipCode)) == 5)
                 return true;
         }
         if ($throw === true)
@@ -223,9 +223,7 @@ class Order
     private function validatePhoneNumber(bool $throw=true): bool
     {
         if (is_int($this->phoneNumber)) {
-            $phoneNumber = str_replace(' ', '', $this->phoneNumber);//todo test if space can get there
-
-            if (strlen($phoneNumber) == 9)
+            if (strlen(strval($this->phoneNumber)) == 9)
                 return true;
         }
         if ($throw === true)
@@ -348,4 +346,19 @@ class Order
         $this->email = $email;
     }
 
+    /**
+     * @return int|null
+     */
+    public function getErrorNumber(): ?int
+    {
+        return $this->errorNumber;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getErrorCode(): ?string
+    {
+        return self::ERROR_CODES[$this->errorNumber];
+    }
 }
