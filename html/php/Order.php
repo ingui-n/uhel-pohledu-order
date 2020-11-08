@@ -9,8 +9,8 @@ use app\Exceptions\OrderException;
 class Order
 {
     const ERROR_CODES = [
-        1 => 'Neplatné množství!',
-        2 => 'Špatný výběr dopravy!',
+        1 => 'Špatný výběr dopravy!',
+        2 => 'Neplatné množství!',
         3 => 'Špatně vyplněné jméno!',
         4 => 'Špatně vyplněné příjmení!',
         5 => 'Špatně vyplněná ulice!',
@@ -33,13 +33,14 @@ class Order
     protected ?int $phoneNumber = null;
     protected ?string $email = null;
     protected ?int $fullPrice = null;
-
-    private bool $issetOrder = false;
+    protected ?array $validationsArray = null;
 
     private array $forbiddenString = ['[', '@', '.', '_', '!', '#', '$', '%', '^', '&', '*', '(', ')', '<', '>', '?', '/', '|', '}', '{', '~', ':', ']'];
 
     protected ?int $errorNumber=null;
+
     protected bool $status=false;
+    private bool $issetOrder = false;
 
 
     public function printOrder(): bool
@@ -50,6 +51,7 @@ class Order
     public function sentOrder()
     {
         try {
+            $this->validateInputs();
             $this->validate();
             $this->sumFullPrice();
             $this->status = true;
@@ -76,6 +78,25 @@ class Order
         $this->validateEmail();
     }
 
+    protected function validateInputs(): void
+    {
+        $array = [];
+        try {
+            array_push($array, $this->validateTransport(false));
+            array_push($array, $this->validateQuantity(false));
+            array_push($array, $this->validateFirstName(false));
+            array_push($array, $this->validateLastName(false));
+            array_push($array, $this->validateStreet(false));
+            array_push($array, $this->validateTown(false));
+            array_push($array, $this->validateZipCode(false));
+            array_push($array, $this->validatePhoneNumber(false));
+            array_push($array, $this->validateEmail(false));
+            $this->validationsArray = $array;
+        } catch (OrderException $e) {
+            echo $e->getCode();
+        }
+    }
+
     /**
      * Was order sent?
      * @return bool
@@ -90,18 +111,6 @@ class Order
     {
         //todo onSuccess
         return $this->issetOrder;
-    }
-
-    /**
-     * @param string $value
-     * @return bool
-     */
-    public function isInvalid(string $value): bool
-    {
-        return false;
-        //eval($value);
-        //echo $this->$value;
-        //return $this->$value;
     }
 
     /**
@@ -147,8 +156,11 @@ class Order
      */
     private function validateFirstName(bool $throw=true): bool
     {
-        if(is_string($this->firstName) && $this->isStringValueValid($this->firstName))
-            return true;
+        if(is_string($this->firstName) && $this->isStringValueValid($this->firstName)) {
+            if (!preg_match('/\d/', $this->firstName)) {
+                return true;
+            }
+        }
         if($throw === true)
             throw new OrderException("First name is missing", 3);
         return false;
@@ -161,8 +173,11 @@ class Order
      */
     private function validateLastName(bool $throw=true): bool
     {
-        if(is_string($this->lastName) && $this->isStringValueValid($this->lastName))
-            return true;
+        if(is_string($this->lastName) && $this->isStringValueValid($this->lastName)) {
+            if (!preg_match('/\d/', $this->lastName)) {
+                return true;
+            }
+        }
         if ($throw === true)
             throw new OrderException("Last name is missing", 4);
         return false;
@@ -347,18 +362,32 @@ class Order
     }
 
     /**
-     * @return int|null
+     * @param int $num
+     * @return string|null
      */
-    public function getErrorNumber(): ?int
+    public function getErrorMessage(int $num): ?string
     {
-        return $this->errorNumber;
+        $num--;
+        $validationError = $this->validationsArray;
+
+        if (isset($validationError[$num]) && $validationError[$num] === false)
+            return self::ERROR_CODES[$num + 1];
+        return null;
     }
 
     /**
-     * @return string|null
+     * @param int $num
+     * @return bool
      */
-    public function getErrorCode(): ?string
+    public function getValidationError(int $num): bool
     {
-        return self::ERROR_CODES[$this->errorNumber];
+        $num--;
+        $validationError = $this->validationsArray;
+
+        if (isset($validationError[$num]) && $validationError[$num] === true)
+            return false;
+        if (isset($validationError[$num]) && $validationError[$num] === false)
+            return true;
+        return false;
     }
 }
