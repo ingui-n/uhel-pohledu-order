@@ -46,6 +46,12 @@ formInputs.forEach((value) => {
             e.preventDefault();
         }
     });
+    value.addEventListener('click', function () {
+        validateAllInputs();
+    });
+    value.addEventListener('keyup', function () {
+        validateAllInputs();
+    });
 });
 
 document.addEventListener('readystatechange', function () {
@@ -73,27 +79,38 @@ function sumFullPrice() {
     }
 }
 
-let submitButtonTrue = document.querySelector('.submit-button__true');
-let submitButtonFalse = document.querySelector('.submit-button__false');
+let submitButton = document.querySelector('.submit-button');
 
-submitButtonFalse.addEventListener('click', function () {
-   validateAllInputs();
+submitButton.addEventListener('click', function (e) {
+   if (validateAllInputs() === false) {
+       e.preventDefault();
+       validateAllInputs(true);
+   }
 });
 
 function validateInput(type) {
     eval(validationTypeArray[type]);
 }
 
-function validateAllInputs() {
-    isQuantityValid();
-    isFirstNameValid();
-    isLastNameValid();
-    isStreetValid();
-    isTownValid();
-    isZipCodeValid();
-    isPhoneNumberValid();
-    isEmailValid();
-    isTermsValid(false, true);
+function validateAllInputs(message=false) {
+    const arr = [
+        isQuantityValid(message),
+        isFirstNameValid(message),
+        isLastNameValid(message),
+        isStreetValid(message),
+        isTownValid(message),
+        isZipCodeValid(message),
+        isPhoneNumberValid(message),
+        isEmailValid(message),
+        isTermsValid(message)
+    ];
+
+    let err = false;
+    arr.forEach(value => {
+        if (value === false)
+            err = true;
+    })
+    return err === false;
 }
 
 function getErrorMessage(message, type, errorNum=null) {
@@ -197,7 +214,7 @@ function isStreetValid(b=false) {
     let street = document.querySelector('#street').value;
 
     if (street !== '') {
-        if (/^[A-Za-zÁáČčĎďÉéĚěÍíŇňÓóŘřŠšŤťŮůÚúÝýŽž0-9]*$/.test(street)) {
+        if (/^[A-Za-z0-9ÁáČčĎďÉéĚěÍíŇňÓóŘřŠšŤťŮůÚúÝýŽž]*$/.test(street)) {
             if (street.length > 0 && street.length < 80) {
                 if (b)
                     getErrorMessage(false, 'street');
@@ -224,7 +241,7 @@ function isTownValid(b=false) {
     let town = document.querySelector('#town').value;
 
     if (town !== '') {
-        if (/^[A-Za-zÁáČčĎďÉéĚěÍíŇňÓóŘřŠšŤťŮůÚúÝýŽž0-9-]*$/.test(town)) {
+        if (/^[A-Za-z0-9ÁáČčĎďÉéĚěÍíŇňÓóŘřŠšŤťŮůÚúÝýŽž]*$/.test(town)) {
             if (town.length > 1 && town.length < 70) {
                 if (b)
                     getErrorMessage(false, 'town');
@@ -323,25 +340,25 @@ function isEmailValid(b=false) {
 /**
  * @returns {boolean}
  */
-function isTermsValid(b=false, c=false) {
+function isTermsValid(b=false) {
     let terms = document.querySelector('#terms');
 
     if (terms.checked) {
         if (b)
             getErrorMessage(false, 'terms');
-        if (c) {
-            submitButtonTrue.style.display = 'block';
-            submitButtonFalse.style.display = 'none';
-        }
         return true;
     }
     else {
         if (b)
             getErrorMessage(true, 'terms', 17);
-        if (c) {
-            submitButtonTrue.style.display = 'none';
-            submitButtonFalse.style.display = 'block';
-        }
         return false;
     }
 }
+
+/*if (/[A-Za-z0-9ÁáČčĎďÉéĚěÍíŇňÓóŘřŠšŤťŮůÚúÝýŽž]/.test('df') || /\[0-9]/.test('aa'))
+    console.log('aaa');
+
+
+if (/^[A-Za-z0-9ÁáČčĎďÉéĚěÍíŇňÓóŘřŠšŤťŮůÚúÝýŽž]\[0-9]*$/.test('sad')) {
+    console.log('yyy');
+}*/

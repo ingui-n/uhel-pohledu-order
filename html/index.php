@@ -101,9 +101,8 @@ if ($order->printOrder() === true) {
                     <label for="terms">Souhlasím s <a href="<?php //terms.html ?>">obchodními podmínkami a zpracováním
                             údajů pro účely vyřízení objednávky</a>.</label>
                     <p class="error__terms"></p>
-                    <input type="submit" class="submit-button__true" value="Odeslat objednávku">
+                    <input type="submit" class="submit-button" value="Odeslat objednávku">
                 </form>
-                <button class="submit-button__false">Odeslat objednávku</button>
             </div>
         </div>
     </div>

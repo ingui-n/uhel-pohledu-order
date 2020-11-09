@@ -5,11 +5,3 @@
 .picture-book {
     width: 150px;
 }
-
-.submit-button__true {
-    display: none;
-}
-
-.submit-button__false {
-    display: block;
-}
