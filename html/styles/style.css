@@ -5,3 +5,9 @@
 .picture-book {
     width: 150px;
 }
+
+@media (min-width: 900px) {
+    .modal-dialog-centered {
+        max-width: 850px;
+    }
+}
