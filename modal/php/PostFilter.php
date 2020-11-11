@@ -10,8 +10,6 @@ class PostFilter
             foreach ($_POST[$postName] as $index => $value) {
                 $this->postValues[$index] = filter_var($value);
             }
-        } else {
-            $this->postValues = null;
         }
     }
 

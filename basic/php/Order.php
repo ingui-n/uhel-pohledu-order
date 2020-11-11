@@ -432,7 +432,6 @@ class Order
                     return true;
             }
         } else {
-            //echo 'validation fails ';
             return true;
         }
         return false;

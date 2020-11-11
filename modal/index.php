@@ -62,10 +62,8 @@ if (($order->isOrderSent() && $order->getValidationFailed()) || $order->getOrder
             </div>
             <div class="modal-body">
                 <?php
-
                 if ($showOrder) {
                     $bookPrice = $order->getBookPrice();
-
                     ?>
                     <div class="container">
                         <div class="centered">
@@ -128,7 +126,6 @@ if (($order->isOrderSent() && $order->getValidationFailed()) || $order->getOrder
                                     <label for="terms">Souhlasím s <a href="<?php //terms.html ?>">obchodními podmínkami a zpracováním
                                             údajů pro účely vyřízení objednávky</a>.</label>
                                     <p class="error__terms"></p>
-
                             </div>
                         </div>
                     </div>
@@ -148,9 +145,9 @@ if (($order->isOrderSent() && $order->getValidationFailed()) || $order->getOrder
                 <button type="button" class="btn btn-secondary <?php echo $showOrder ? 'reload' : ''; ?>" data-dismiss="modal">Zavřít</button>
                 <?php
                 if ($showOrder) {
-                ?>
-                <input type="submit" class="btn btn-primary submit-button" value="Odeslat objednávku">
-                <?php
+                    ?>
+                    <input type="submit" class="btn btn-primary submit-button" value="Odeslat objednávku">
+                    <?php
                 }
                 ?>
             </div>

@@ -6,8 +6,68 @@
     width: 150px;
 }
 
+.container {
+    padding: 40px 0 15px 0;
+}
+
+.transport {
+    display: flex;
+    justify-content: space-around;
+    padding-bottom: 55px;
+    padding-top: 20px;
+}
+
+.transport-option {
+    text-align: center;
+}
+
+.book-quantity {
+    display: grid;
+    grid-template-columns: 170px 60px 130px max-content min-content;
+    align-items: center;
+}
+
+.form-text-inputs {
+    text-align: left;
+    display: grid;
+    grid-template-columns: 230px 220px max-content;
+    
+    grid-row-gap: 12px;
+    padding-bottom: 35px;
+    padding-left: 27%;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: max-content min-content;
+    column-gap: 17px;
+    place-content: center;
+}
+
+.basic-p {
+    padding: 0;
+    margin: 0;
+    align-self: center;
+}
+
+#quantity {
+    height: min-content;
+    margin-right: 7px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 @media (min-width: 900px) {
     .modal-dialog-centered {
+        max-width: 850px;
+    }
+}
+@media (min-width: 950px) {
+    .container {
         max-width: 850px;
     }
 }
