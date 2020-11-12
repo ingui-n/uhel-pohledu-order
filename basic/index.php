@@ -54,7 +54,6 @@ $bookPrice = $order->getBookPrice();
         <a href="mailto:objednavky@uhel-pohledu.cz">objednavky@uhel-pohledu.cz</a>.
     </p>
     <form method="post" name="order">
-        <input type="hidden" name="order">
         <p class="error-message error__transport"><?php echo $order->getErrorMessage(1); ?></p>
         <div class="transport">
             <div class="transport__left">

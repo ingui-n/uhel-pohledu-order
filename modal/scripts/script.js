@@ -63,7 +63,7 @@ if (document.querySelector('.container')) {
         sumFullPrice();
     });
 
-    let transportMethod = document.querySelectorAll('#radio');
+    let transportMethod = document.querySelectorAll('.radio');
 
     transportMethod.forEach(value => {
         value.addEventListener('click', function () {
@@ -75,7 +75,12 @@ if (document.querySelector('.container')) {
         if (parseInt(quantity.value) < 1 || quantity.value === '' || parseInt(quantity.value) > maxQuantity) {
             totalPrice.textContent = '0';
         } else {
-            let transportPrice = document.querySelector('#radio:checked');
+            let transportPrice
+            if (document.querySelector('#radio1:checked')) {
+                transportPrice = document.querySelector('#radio1:checked');
+            } else {
+                transportPrice = document.querySelector('#radio2:checked');
+            }
             let price = bookPrice * parseInt(quantity.value) + parseInt(transportPrice.dataset.price);
             totalPrice.textContent = stylePrice(price);
         }
@@ -454,14 +459,4 @@ if (document.querySelector('.container')) {
             return false;
         }
     }
-}
-
-if (document.getElementById('open-order-form')) {
-    document.getElementById('open-order-form').click();
-
-    window.addEventListener('click', function(e){
-        if (!document.querySelector('.modal-content').contains(e.target)) {
-            location.replace("");
-        }
-    });
 }
