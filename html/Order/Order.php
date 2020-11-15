@@ -1,14 +1,13 @@
 <?php
 declare(strict_types=1);
 
-include_once __DIR__ . '/PostFilter.php';
-include_once __DIR__ . './../Exceptions/OrderException.php';
-
 use app\Exceptions\OrderException;
 
 class Order
 {
-    const ERROR_CODES = [
+    const
+        FORBIDDEN_STRINGS = ['[', '@', '.', '_', '!', '#', '$', '%', '^', '&', '*', '(', ')', '<', '>', '?', '/', '|', '}', '{', '~', ':', ']'],
+        ERROR_CODES = [
         1 => 'Špatný výběr dopravy!',
         2 => 'Neplatné množství!',
         3 => 'Špatně vyplněné jméno!',
@@ -20,9 +19,8 @@ class Order
         9 => 'Neplatný email!'
     ];
 
-    const BOOK_PRICE = 499;
-    const TRANSPORT_TYPES = ['cashOnDelivery' => 150, 'moneyTransfer' => 0];
-
+    protected int $bookPrice;
+    protected array $transportTypes;
     protected ?string $transport = null;
     protected ?int $quantity = null;
     protected ?string $firstName = null;
@@ -34,34 +32,62 @@ class Order
     protected ?string $email = null;
     protected ?int $fullPrice = null;
     protected array $validationsArray = [];
-
-    private array $forbiddenString = ['[', '@', '.', '_', '!', '#', '$', '%', '^', '&', '*', '(', ')', '<', '>', '?', '/', '|', '}', '{', '~', ':', ']'];
-
     protected ?int $errorNumber=null;
-
     protected bool $status=false;
-    private bool $issetOrder = false;
+    private bool $issetOrder=false;
+    protected bool $completed=false;
 
+    /**
+     * On success callback
+     * @var null|callable
+     */
+    protected $onSuccessCallback=null;
 
-    public function printOrder(): bool
+    /**
+     * Order constructor.
+     * load config
+     */
+    public function __construct()
     {
-        return $this->status === false;
+        $this->bookPrice = config::BOOK_PRICE;
+        $this->transportTypes = config::TRANSPORT_TYPES;
     }
 
+
+    /**
+     * Print order condition
+     * @return bool
+     */
+    public function printOrder(): bool
+    {
+        return $this->issetOrder === false || ($this->status === false && $this->issetOrder === true);
+    }
+
+    /**
+     * Try to sent order
+     * @return bool
+     */
     public function sentOrder(): bool
     {
-        $this->setOrderedToSession(false);
+        $this->issetOrder = true;
         try {
             $this->validate();
             $this->sumFullPrice();
             $this->status = true;
         } catch (OrderException $e) {
             $this->errorNumber = $e->getCode();
+            $this->status = false;
             return false;
         }
-        $this->setOrderedToSession(true);
-        $this->onSuccess();
-        return true;
+
+        if(is_callable($this->onSuccessCallback))
+        {
+            $onSuccessFn = $this->onSuccessCallback;
+            $this->completed = $onSuccessFn($this);
+        }else{
+            $this->completed = true;
+        }
+        return $this->completed;
     }
 
     /**
@@ -82,41 +108,13 @@ class Order
     }
 
     /**
-     * Was order sent?
-     * @return bool
-     */
-    public function isOrderSent(): bool
-    {
-        return isset($_POST) && isset($_POST["order"]);
-    }
-
-
-    public function onSuccess(): bool
-    {
-        //todo onSuccess
-        return $this->issetOrder;
-    }
-
-    public function setOrderedToSession(bool $set): void
-    {
-        $_SESSION['ordered'] = $set;
-    }
-
-    public function getOrderedFromSession(): bool
-    {
-        if (isset($_SESSION['ordered']))
-            return $_SESSION['ordered'];
-        return false;
-    }
-
-    /**
      * @param bool $throw
      * @return bool
      * @throws OrderException
      */
     private function validateTransport(bool $throw=true): bool
     {
-        $transportTypes = self::TRANSPORT_TYPES;
+        $transportTypes = $this->transportTypes;
 
         foreach ($transportTypes as $transportType => $index) {
             if ($this->transport == $transportType) {
@@ -293,100 +291,133 @@ class Order
      * @param string $value
      * @return bool
      */
-
     private function isStringValueValid(string $value): bool
     {
-        $value = str_replace($this->forbiddenString, '', $value);
+        $value = str_replace(self::FORBIDDEN_STRINGS, '', $value);
 
         if (strlen($value) > 0 && strlen($value) < 100)
             return true;
         return false;
     }
 
+    /**
+     * Sum full price
+     * @return bool
+     */
     private function sumFullPrice(): bool
     {
         $transport = $this->transport;
-        $this->fullPrice = self::BOOK_PRICE * $this->quantity + self::TRANSPORT_TYPES[$transport];
+        $this->fullPrice = $this->bookPrice * $this->quantity + $this->transportTypes[$transport];
 
         return $this->fullPrice > $transport;
     }
 
+    /**
+     * Get book price with VAT
+     * @return int
+     */
     public function getBookPrice(): int
     {
-        return self::BOOK_PRICE;
+        return $this->bookPrice;
     }
 
     /**
+     * Set transport
      * @param string|null $transport
+     * @return Order
      */
-    public function setTransport(?string $transport): void
+    public function setTransport(?string $transport): self
     {
         $this->transport = $transport;
+        return $this;
     }
 
     /**
+     * Set quantity
      * @param int|null $quantity
+     * @return Order
      */
-    public function setQuantity(?int $quantity): void
+    public function setQuantity(?int $quantity): self
     {
         $this->quantity = $quantity;
+        return $this;
     }
 
     /**
      * Set first name
      * @param string|null $firstName
+     * @return Order
      */
-    public function setFirstName(?string $firstName): void
+    public function setFirstName(?string $firstName): self
     {
         $this->firstName = $firstName;
+        return $this;
     }
 
     /**
+     * Set last name
      * @param string|null $lastName
+     * @return Order
      */
-    public function setLastName(?string $lastName): void
+    public function setLastName(?string $lastName): self
     {
         $this->lastName = $lastName;
+        return $this;
     }
 
     /**
+     * Set street
      * @param string|null $street
+     * @return Order
      */
-    public function setStreet(?string $street): void
+    public function setStreet(?string $street): self
     {
         $this->street = $street;
+        return $this;
     }
 
     /**
+     * Set town
      * @param string|null $town
+     * @return Order
      */
-    public function setTown(?string $town): void
+    public function setTown(?string $town): self
     {
         $this->town = $town;
+        return $this;
     }
 
     /**
+     * Set zip code
      * @param string|null $zipCode
+     * @return Order
      */
-    public function setZipCode(?string $zipCode): void
+    public function setZipCode(?string $zipCode): self
     {
         $this->zipCode = $zipCode;
+        return $this;
     }
 
     /**
+     * Set phone number
      * @param string|null $phoneNumber
+     * @return Order
      */
-    public function setPhoneNumber(?string $phoneNumber): void
+    public function setPhoneNumber(?string $phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
+        return $this;
     }
 
     /**
+     * Set email
      * @param string|null $email
+     * @return Order
      */
-    public function setEmail(?string $email): void
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
+        return $this;
     }
 
     /**
@@ -435,5 +466,97 @@ class Order
             return true;
         }
         return false;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTransport(): ?string
+    {
+        return $this->transport;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getQuantity(): ?int
+    {
+        return $this->quantity;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getStreet(): ?string
+    {
+        return $this->street;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTown(): ?string
+    {
+        return $this->town;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getZipCode(): ?string
+    {
+        return $this->zipCode;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPhoneNumber(): ?string
+    {
+        return $this->phoneNumber;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set on success callback
+     * @param callable $onSuccessCallback
+     * @return Order
+     */
+    public function setOnSuccessCallback(callable $onSuccessCallback): self
+    {
+        $this->onSuccessCallback = $onSuccessCallback;
+        return $this;
+    }
+
+    /**
+     * Was order completed (order was sent && all inputs are valid && on success)
+     * @return bool
+     */
+    public function isCompleted(): bool
+    {
+        return $this->completed;
     }
 }

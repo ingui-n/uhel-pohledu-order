@@ -183,7 +183,6 @@ if (document.querySelector('.container')) {
             e.preventDefault();
             validateAllInputs(true);
         }
-        console.log('sad');
     });
 
     function validateInput(type) {
