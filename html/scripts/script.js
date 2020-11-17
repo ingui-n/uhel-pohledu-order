@@ -427,7 +427,7 @@ if (document.querySelector('.container')) {
         let email = document.querySelector('#email').value;
 
         if (email !== '') {
-            if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+[@]+[a-zA-Z0-9-]+[.]+[a-zA-Z0-9-.]/.test(email)) {
+            if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+[@]+[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+[.]+[a-zA-Z0-9-]/.test(email)) {
                 if (b)
                     getErrorMessage(false, 'email');
                 return true;

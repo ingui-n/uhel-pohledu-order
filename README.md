@@ -16,8 +16,8 @@ For config constants go to config.php file:
 - TERMS_LINK = link to open shop terms
 - PICTURE_PATH = path to product picture
 
-## INSTALATION
-1) RUN comand 'composer update' to download libraries of third parity
-2) Check your sttings in config.php
-2) Place folder with code anywhere you want
-3) enjoy
+## INSTALLATION
+1) RUN command 'composer update' to download libraries of third parity
+2) Check your settings in config.php
+3) Place folder with code anywhere you want
+4) enjoy

@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 
-
 use e2221\HtmElement\BaseElement;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -13,8 +12,8 @@ class Message
     protected ?string $senderEmail;
     protected string $smtpSecure = 'tls';
     protected int $port = 587;
-    public string $subject='';
-    protected ?string $receiverEmail=null;
+    public string $subject = '';
+    protected ?string $receiverEmail = null;
 
     /**
      * Message constructor.
@@ -67,7 +66,7 @@ class Message
     {
         $table = BaseElement::getStatic('table');
         $tr[] = BaseElement::getStatic('tr')
-            ->addElement(BaseElement::getStatic('th', [], 'Jméno a příjemní:'))
+            ->addElement(BaseElement::getStatic('th', [], 'Jméno a příjmení:'))
             ->addElement(BaseElement::getStatic('td', [], sprintf('%s %s', $order->getFirstName(), $order->getLastName())));
         $tr[] = BaseElement::getStatic('tr')
             ->addElement(BaseElement::getStatic('th', [], 'Ulice a čp.:'))
@@ -96,7 +95,7 @@ class Message
         $html = BaseElement::getStatic('html', ['lang'=>'cs'])
             ->addElement(
                 BaseElement::getStatic('body')
-                    ->addElement(BaseElement::getStatic('h2', [], 'Nová objednávka'))
+                    ->addElement(BaseElement::getStatic('h2', [], config::EMAIL_ORDER_SUBJECT))
                     ->addElement($table)
                     ->addElement(BaseElement::getStatic('br'))
                     ->addElement(

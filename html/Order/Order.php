@@ -32,16 +32,16 @@ class Order
     protected ?string $email = null;
     protected ?int $fullPrice = null;
     protected array $validationsArray = [];
-    protected ?int $errorNumber=null;
-    protected bool $status=false;
-    private bool $issetOrder=false;
-    protected bool $completed=false;
+    protected ?int $errorNumber = null;
+    protected bool $status = false;
+    private bool $issetOrder = false;
+    protected bool $completed = false;
 
     /**
      * On success callback
      * @var null|callable
      */
-    protected $onSuccessCallback=null;
+    protected $onSuccessCallback = null;
 
     /**
      * Order constructor.
@@ -80,11 +80,10 @@ class Order
             return false;
         }
 
-        if(is_callable($this->onSuccessCallback))
-        {
+        if (is_callable($this->onSuccessCallback)) {
             $onSuccessFn = $this->onSuccessCallback;
             $this->completed = $onSuccessFn($this);
-        }else{
+        } else {
             $this->completed = true;
         }
         return $this->completed;
@@ -112,7 +111,7 @@ class Order
      * @return bool
      * @throws OrderException
      */
-    private function validateTransport(bool $throw=true): bool
+    private function validateTransport(bool $throw = true): bool
     {
         $transportTypes = $this->transportTypes;
 
@@ -123,7 +122,7 @@ class Order
             }
         }
         array_push($this->validationsArray, false);
-        if($throw === true)
+        if ($throw === true)
             throw new OrderException("Transport is missing", 1);
         return false;
     }
@@ -133,7 +132,7 @@ class Order
      * @return bool
      * @throws OrderException
      */
-    private function validateQuantity(bool $throw=true): bool
+    private function validateQuantity(bool $throw = true): bool
     {
         if (is_int($this->quantity))
             if ($this->quantity > 0 && $this->quantity <= 500) {
@@ -152,16 +151,16 @@ class Order
      * @return bool
      * @throws OrderException
      */
-    private function validateFirstName(bool $throw=true): bool
+    private function validateFirstName(bool $throw = true): bool
     {
-        if(is_string($this->firstName) && $this->isStringValueValid($this->firstName)) {
+        if (is_string($this->firstName) && $this->isStringValueValid($this->firstName)) {
             if (!preg_match('/\d/', $this->firstName)) {
                 array_push($this->validationsArray, true);
                 return true;
             }
         }
         array_push($this->validationsArray, false);
-        if($throw === true)
+        if ($throw === true)
             throw new OrderException("First name is missing", 3);
         return false;
     }
@@ -171,9 +170,9 @@ class Order
      * @return bool
      * @throws OrderException
      */
-    private function validateLastName(bool $throw=true): bool
+    private function validateLastName(bool $throw = true): bool
     {
-        if(is_string($this->lastName) && $this->isStringValueValid($this->lastName)) {
+        if (is_string($this->lastName) && $this->isStringValueValid($this->lastName)) {
             if (!preg_match('/\d/', $this->lastName)) {
                 array_push($this->validationsArray, true);
                 return true;
@@ -190,7 +189,7 @@ class Order
      * @return bool
      * @throws OrderException
      */
-    private function validateStreet(bool $throw=true): bool
+    private function validateStreet(bool $throw = true): bool
     {
         if (is_string($this->street) && $this->isStringValueValid($this->street)) {
             if (preg_match('/\d/', $this->street)) {
@@ -209,7 +208,7 @@ class Order
      * @return bool
      * @throws OrderException
      */
-    private function validateTown(bool $throw=true): bool
+    private function validateTown(bool $throw = true): bool
     {
         if (is_string($this->town) && $this->isStringValueValid($this->town)) {
             array_push($this->validationsArray, true);
@@ -226,7 +225,7 @@ class Order
      * @return bool
      * @throws OrderException
      */
-    private function validateZipCode(bool $throw=true): bool
+    private function validateZipCode(bool $throw = true): bool
     {
         $zipCode = $this->zipCode;
 
@@ -250,7 +249,7 @@ class Order
      * @return bool
      * @throws OrderException
      */
-    private function validatePhoneNumber(bool $throw=true): bool
+    private function validatePhoneNumber(bool $throw = true): bool
     {
         $phoneNumber = $this->phoneNumber;
 
@@ -274,7 +273,7 @@ class Order
      * @return bool
      * @throws OrderException
      */
-    private function validateEmail(bool $throw=true): bool
+    private function validateEmail(bool $throw = true): bool
     {
         if (is_string($this->email) && filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             array_push($this->validationsArray, true);
