@@ -84,9 +84,14 @@ class Message
         $tr[] = BaseElement::getStatic('tr')
             ->addElement(BaseElement::getStatic('th', [], 'E-mail:'))
             ->addElement(BaseElement::getStatic('td', [], $order->getEmail()));
+        $tr[] = BaseElement::getStatic('tr')
+            ->addElement(BaseElement::getStatic('th', [], 'Doprava:'))
+            ->addElement(BaseElement::getStatic('td', [], $order->getTransport()));
+        $tr[] = BaseElement::getStatic('tr')
+            ->addElement(BaseElement::getStatic('th', [], 'Cena celkem:'))
+            ->addElement(BaseElement::getStatic('td', [], sprintf("%s Kć", $order->sumFullPrice())));
         foreach($tr as $trKey => $trEl)
             $table->addElement($trEl);
-
 
         $html = BaseElement::getStatic('html', ['lang'=>'cs'])
             ->addElement(

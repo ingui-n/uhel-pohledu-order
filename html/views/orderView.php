@@ -15,13 +15,19 @@ if(isset($order) && $order instanceof Order)
                 <label for="radio1" class="radio-container">
                     <input type="radio" name="order[transport]"
                            class="radio <?php echo $order->getValidationError(1) ? 'error-input' : ''; ?>" id="radio1"
-                           value="cashOnDelivery" data-price="150" checked>
-                    <img src="images/book.jpg" class="picture-book" alt="Kniha">
+                           value="cashOnDelivery" data-price="<?php echo config::TRANSPORT_TYPES['cashOnDelivery'] ?>" checked>
+                    <img src="<?php echo config::PICTURE_PATH; ?>" class="picture-book" alt="Kniha">
                     <span class="checkmark"></span>
                 </label>
                 <div class="transport-option">
-                    <p class="book-price"><span class="book__price"><?php echo $order->getBookPrice();; ?></span>,-/ks</p>
-                    <p>+ Dobírka 150 Kč</p>
+                    <p class="book-price"><span class="book__price"><?php echo $order->getBookPrice(); ?></span>,-/ks</p>
+                    <?php
+                        if(config::TRANSPORT_TYPES['cashOnDelivery'] > 0){
+                    ?>
+                            <p>+ Dobírka <?php echo config::TRANSPORT_TYPES['cashOnDelivery'] ?> Kč</p>
+                    <?php
+                        }
+                    ?>
                     <p>Česká pošta - doporučeně</p>
                 </div>
             </div>
@@ -29,8 +35,8 @@ if(isset($order) && $order instanceof Order)
                 <label for="radio2" class="radio-container">
                     <input type="radio" name="order[transport]"
                            class="radio <?php echo $order->getValidationError(1) ? 'error-input' : ''; ?>" id="radio2"
-                           value="moneyTransfer" data-price="0">
-                    <img src="images/book.jpg" class="picture-book" alt="Kniha">
+                           value="moneyTransfer" data-price="<?php echo config::TRANSPORT_TYPES['moneyTransfer'] ?>">
+                    <img src="<?php echo config::PICTURE_PATH; ?>" class="picture-book" alt="Kniha">
                     <span class="checkmark"></span>
                 </label>
                 <div class="transport-option">
