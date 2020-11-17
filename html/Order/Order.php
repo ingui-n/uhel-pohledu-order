@@ -302,14 +302,12 @@ class Order
 
     /**
      * Sum full price
-     * @return bool
+     * @return float|int|mixed
      */
-    private function sumFullPrice(): bool
+    public function sumFullPrice()
     {
         $transport = $this->transport;
-        $this->fullPrice = $this->bookPrice * $this->quantity + $this->transportTypes[$transport];
-
-        return $this->fullPrice > $transport;
+        return $this->fullPrice = $this->bookPrice * $this->quantity + $this->transportTypes[$transport];
     }
 
     /**
@@ -538,6 +536,15 @@ class Order
     public function getEmail(): ?string
     {
         return $this->email;
+    }
+
+    /**
+     * Get transport types
+     * @return array|int[]
+     */
+    public function getTransportTypes(): array
+    {
+        return $this->transportTypes;
     }
 
     /**

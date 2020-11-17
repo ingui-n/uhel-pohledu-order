@@ -10,15 +10,15 @@ class config
 
         //transport prices
         TRANSPORT_TYPES = [
-                'cashOnDelivery' => 150,
-                'moneyTransfer' => 0
+                "cashOnDelivery" => 40,
+                "moneyTransfer" => 0
         ],
 
         //smptp host
-        SMTP_HOST = 'mail.look-e.cz',
+        SMTP_HOST = "mail.look-e.cz",
 
         //smpt user
-        SMTP_USER = 'noreply@uhel-pohledu.cz',
+        SMTP_USER = "noreply@uhel-pohledu.cz",
 
         //email password
         EMAIL_PASSWORD = "",
@@ -30,11 +30,14 @@ class config
         EMAIL_ORDER_SUBJECT = "Nová objednávka",
 
         //order email receiver
-        ORDER_EMAIL = 'objednavka@uhel-pohledu.cz',
+        ORDER_EMAIL = "objednavka@uhel-pohledu.cz",
 
         //back link
         BACK_LINK = "",
 
         //terms link
-        TERMS_LINK = "";
+        TERMS_LINK = "",
+
+        //path to picture
+        PICTURE_PATH = "images/book.jpg";
 }
