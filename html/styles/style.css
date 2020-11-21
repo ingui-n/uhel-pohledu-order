@@ -1,4 +1,16 @@
+@font-face {
+    font-family: 'roboto_slab';
+    src: url('fonts/RobotoSlab-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+p, label {
+    font-family: 'roboto_slab', serif;
+}
+
 button, input {
+    font-family: 'roboto_slab', serif;
     border-width: 1px;
 }
 
@@ -12,6 +24,7 @@ button, input {
 
 .error-message {
     color: red;
+    padding-top: 8px;
 }
 
 .error__quantity {
@@ -19,7 +32,7 @@ button, input {
     padding-left: 0;
 }
 
-.container {
+.order-container {
     max-width: 925px;
     padding: 15px 0 15px 0;
 }
@@ -57,9 +70,12 @@ button, input {
     place-content: center;
 }
 
+.submit-button {
+    width: fit-content;
+}
+
 .basic-p {
     margin: 0;
-    align-self: center;
     width: max-content;
 }
 
@@ -129,6 +145,10 @@ button, input {
 
 .terms {
     margin-left: 15%;
+}
+
+.form-item {
+    border-radius: 4px;
 }
 
 .form-head {
@@ -205,6 +225,18 @@ button, input {
     margin-left: 10px;
 }
 
+.submit-button {
+    word-break: normal;
+}
+
+.form-item {
+    border-radius: 3px;
+}
+
+.basic-label {
+    margin-top: -18px;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -231,6 +263,9 @@ input::-webkit-inner-spin-button {
 
     .form-text-inputs {
         grid-template-columns: 1fr 1fr;
+        text-align: inherit;
+        justify-content: normal;
+        padding-left: 7%;
     }
 
     .terms {
@@ -252,10 +287,19 @@ input::-webkit-inner-spin-button {
     .head-p {
         margin-left: 0;
     }
+
+    .form-item {
+        width: 145px;
+    }
+
+    .basic-p {
+        width: auto;
+    }
 }
 
 @media (min-width: 576px) {
-    .container, .container-sm {
-        /* max-width: 540px; */
+    .submit-button {
+        word-break: unset;
+        width: max-content;
     }
 }

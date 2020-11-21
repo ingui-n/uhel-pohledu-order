@@ -1,7 +1,7 @@
 <?php
 if (isset($order) && $order instanceof Order) {
     ?>
-    <div class="container">
+    <div class="order-container">
         <p class="head-p">Objednávky do <b>zahraničí</b>, v počtu <b>více než X ks</b>, nebo s <b>
                 osobním převzetím v Mladé Boleslavi</b> vyřizujeme <b>s individuálním přístupem</b>.
             Kontaktujte nás prosím na
@@ -61,21 +61,21 @@ if (isset($order) && $order instanceof Order) {
             <p class="error-message error__quantity"><?php echo $order->getErrorMessage(2); ?></p>
             <p class="form-head">Fakturační a dodací adresa:</p>
             <div class="form-text-inputs">
-                <label for="first-name">Jméno:</label>
+                <label for="first-name" class="basic-p basic-label">Jméno:</label>
                 <div>
                     <input type="text" name="order[first-name]"
                            class="form-item <?php echo $order->getValidationError(3) ? 'error-input' : ''; ?>"
                            id="first-name" required value="<?php echo $postValues['first-name'] ?? ''; ?>">
                     <p class="basic-p error-message error__first-name"><?php echo $order->getErrorMessage(3); ?></p>
                 </div>
-                <label for="last-name" class="basic-p">Příjmení:</label>
+                <label for="last-name" class="basic-p basic-label">Příjmení:</label>
                 <div>
                     <input type="text" name="order[last-name]"
                            class="form-item <?php echo $order->getValidationError(4) ? 'error-input' : ''; ?>"
                            id="last-name" required value="<?php echo $postValues['last-name'] ?? ''; ?>">
                     <p class="basic-p error-message error__last-name"><?php echo $order->getErrorMessage(4); ?></p>
                 </div>
-                <label for="street" class="basic-p">Ulice a číslo:</label>
+                <label for="street" class="basic-p basic-label">Ulice a číslo:</label>
                 <div>
                     <input type="text" name="order[street]"
                            class="form-item <?php echo $order->getValidationError(5) ? 'error-input' : ''; ?>"
@@ -83,14 +83,14 @@ if (isset($order) && $order instanceof Order) {
                            required value="<?php echo $postValues['street'] ?? ''; ?>">
                     <p class="basic-p error-message error__street"><?php echo $order->getErrorMessage(5); ?></p>
                 </div>
-                <label for="town" class="basic-p">Město:</label>
+                <label for="town" class="basic-p basic-label">Město:</label>
                 <div>
                     <input type="text" name="order[town]"
                            class="form-item <?php echo $order->getValidationError(6) ? 'error-input' : ''; ?>" id="town"
                            required value="<?php echo $postValues['town'] ?? ''; ?>">
                     <p class="basic-p error-message error__town"><?php echo $order->getErrorMessage(6); ?></p>
                 </div>
-                <label for="zip-code" class="basic-p">PSČ:</label>
+                <label for="zip-code" class="basic-p basic-label">PSČ:</label>
                 <div>
                     <input type="text" name="order[zip-code]"
                            class="form-item <?php echo $order->getValidationError(7) ? 'error-input' : ''; ?>"
@@ -98,14 +98,14 @@ if (isset($order) && $order instanceof Order) {
                            required value="<?php echo $postValues['zip-code'] ?? ''; ?>">
                     <p class="basic-p error-message error__zip-code"><?php echo $order->getErrorMessage(7); ?></p>
                 </div>
-                <label for="phone-number" class="basic-p">Telefon:</label>
+                <label for="phone-number" class="basic-p basic-label">Telefon:</label>
                 <div>
                     <input type="text" name="order[phone-number]"
                            class="form-item <?php echo $order->getValidationError(8) ? 'error-input' : ''; ?>"
                            id="phone-number" required value="<?php echo $postValues['phone-number'] ?? ''; ?>">
                     <p class="basic-p error-message error__phone-number"><?php echo $order->getErrorMessage(8); ?></p>
                 </div>
-                <label for="email" class="basic-p">E-mail:</label>
+                <label for="email" class="basic-p basic-label">E-mail:</label>
                 <div>
                     <input type="text" name="order[email]"
                            class="form-item <?php echo $order->getValidationError(9) ? 'error-input' : ''; ?>"

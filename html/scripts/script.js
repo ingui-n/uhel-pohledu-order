@@ -1,4 +1,4 @@
-if (document.querySelector('.container')) {
+if (document.querySelector('.order-container')) {
     const maxQuantity = 500;
     const bookPrice = document.querySelector('.book__price').textContent;
     const errorMessages = [
