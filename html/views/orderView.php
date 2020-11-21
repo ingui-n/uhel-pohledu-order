@@ -21,8 +21,7 @@ if (isset($order) && $order instanceof Order) {
                         <span class="checkmark"></span>
                     </label>
                     <div class="transport-option">
-                        <p class="book-price"><span class="book__price"><?php echo $order->getBookPrice(); ?></span>,-/ks
-                        </p>
+                        <p class="book-price"><span class="book__price"><?php echo $order->getBookPrice(); ?></span>,-/ks</p>
                         <?php
                         if (config::TRANSPORT_TYPES['cashOnDelivery'] > 0) {
                             ?>

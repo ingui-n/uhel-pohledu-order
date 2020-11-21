@@ -43,9 +43,8 @@ if (document.querySelector('.order-container')) {
             validateAllInputs();
         });
         value.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter')
                 e.preventDefault();
-            }
         });
         value.addEventListener('click', function () {
             validateAllInputs();
