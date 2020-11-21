@@ -70,7 +70,7 @@ if (document.querySelector('.container')) {
     transportMethod.forEach(value => {
         value.addEventListener('click', function () {
             sumFullPrice();
-        })
+        });
     });
 
     function sumFullPrice() {
