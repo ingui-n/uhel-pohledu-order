@@ -1,9 +1,9 @@
 if (document.querySelector('.container')) {
-    const maxQuantity = 1000;
-    const bookPrice = 499;
+    const maxQuantity = 500;
+    const bookPrice = document.querySelector('.book__price').textContent;
     const errorMessages = [
         'Zadejte požadovanou hodnotu!',
-        'Zadejte číslo!',//--
+        'Maximální množství je ' + maxQuantity + '!',
         'Zadejte platnou číselnou hodnotu!',
         'Zadejte Vaše jméno!',
         'Zadejte své pravé jméno!',
@@ -60,6 +60,8 @@ if (document.querySelector('.container')) {
     });
 
     quantity.addEventListener('keyup', function () {
+        if (quantity.value > 500)
+            getErrorMessage(true, 'quantity', 1);
         sumFullPrice();
     });
 
