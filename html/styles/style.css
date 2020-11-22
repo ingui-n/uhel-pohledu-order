@@ -5,6 +5,11 @@
     font-style: normal;
 }
 
+body {
+    display: flex;
+    justify-content: center;
+}
+
 p, label {
     font-family: 'roboto_slab', serif;
 }
@@ -231,10 +236,6 @@ button, input {
 
 .form-item {
     border-radius: 3px;
-}
-
-.basic-label {
-    margin-top: -18px;
 }
 
 input::-webkit-outer-spin-button,
