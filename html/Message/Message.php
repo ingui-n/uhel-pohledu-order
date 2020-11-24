@@ -85,7 +85,7 @@ class Message
             ->addElement(BaseElement::getStatic('td', [], $order->getEmail()));
         $tr[] = BaseElement::getStatic('tr')
             ->addElement(BaseElement::getStatic('th', [], 'Množství:'))
-            ->addElement(BaseElement::getStatic('td', [], sprintf("%s", $order->getQuantity())));
+            ->addElement(BaseElement::getStatic('td', [], sprintf("%s ks", $order->getQuantity())));
         $tr[] = BaseElement::getStatic('tr')
             ->addElement(BaseElement::getStatic('th', [], 'Doprava:'))
             ->addElement(BaseElement::getStatic('td', [], $order->getTransport()));
